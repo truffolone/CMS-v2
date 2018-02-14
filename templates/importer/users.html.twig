@@ -1,0 +1,142 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Import Users{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <h2>Users Import</h2>
+    </div>
+    <div class="row">
+        <form class="form-control">
+            <div class="form-group">
+                <label for="start">Start:</label> <input type="number" id="start" value="0" name="start">
+            </div>
+            <div class="form-group">
+                <label for="cycles">Rows:</label> <input type="number" id="cycles" value="200" name="cycles">
+            </div>
+            <div class="form-check">
+                <input type="checkbox" name="overwrite" value="1" id="overwrite">
+                <label for="overwrite">Overwrite existing data</label>
+            </div>
+            <button type="submit" id="startImport" class="btn btn-primary">Import!</button>
+        </form>
+    </div>
+    <br>
+    <div class="progress">
+        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+    </div>
+    <br>
+    <div class="row">
+        <ul>
+            <li>Overwrite: <span id="ow_txt"></span></li>
+            <li>Start: <span id="start_txt"></span></li>
+            <li>User per cycle: <span id="cycles_txt"></span></li>
+        </ul>
+    </div>
+    <h2>
+        Log
+    </h2>
+    <div class="row" id="log">
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function(){
+            var ow_txt = 1;
+            var start_txt = 0;
+            var cycles_txt = 200;
+            var baseUrl = "http://s4.echo.tfl/";
+            var barValue = 0;
+            var progressBar = $("#progressBar");
+            var totImport = 0;
+
+            function setVisualValues()
+            {
+                getVisualValues();
+                $("#ow_txt").empty().text(ow_txt.toString());
+                $("#start_txt").empty().text(start_txt.toString());
+                $("#cycles_txt").empty().text(cycles_txt.toString());
+            }
+
+            function getVisualValues()
+            {
+                if($("#overwrite").is(":checked")) {
+                    ow_txt = 1;
+                } else {
+                    ow_txt = 0;
+                }
+                start_txt = parseInt($("#start").val());
+                cycles_txt = parseInt($("#cycles").val());
+            }
+
+            function clearLog()
+            {
+                $("#log").empty();
+            }
+
+            function log(insertText)
+            {
+
+                $("#log").prepend(insertText + "<br>");
+            }
+
+            function setProgress(value)
+            {
+                if(value > 100) value = 100;
+                barValue = value;
+                var valueString = barValue.toString();
+                progressBar.css("width", valueString + "%");
+                progressBar.empty().text(valueString + "%");
+                progressBar.attr("aria-valuenow", valueString);
+            }
+
+            function importUsers(start, percPerTranches) {
+                log("Importing users from " + start.toString() + " to " + (start + cycles_txt).toString());
+                $.get(baseUrl + "importer/importUserData?overwrite=" + ow_txt + "&start=" + start + "&cycles=" + cycles_txt,
+                    function(resData){
+                        if(resData.result !== 'success') {
+                            log("Error!");
+                        } else {
+                            log("Success!");
+                            setProgress((percPerTranches * (Math.floor(start/cycles_txt)+1)).toFixed(2));
+                            if(totImport >= start) {
+                                importUsers((start + cycles_txt), percPerTranches);
+                            }
+                        }
+                    });
+            }
+
+            $("#startImport").click(function(e){
+                e.preventDefault();
+                clearLog();
+                log("Saving Values...");
+                setVisualValues();
+                log("Values are Set");
+
+                log("Recreating export file");
+                $.get(baseUrl + "importer/users2?force=0", function(data) {
+                    if(data.result === 'success') {
+                        log("json data has been exported!");
+
+                        log("checking users to import");
+                        $.get(baseUrl + "importer/usersToImport", function(dataCount) {
+                            if(dataCount.result === 'success') {
+                                totImport = dataCount.conta;
+                                log("Utenti Rilevati: " + totImport.toString());
+
+                                /** set tranches */
+                                var tranches = Math.floor(totImport / cycles_txt) + 1;
+                                var percPerTranches = (100 / tranches).toFixed(2);
+
+                                /** cycling */
+                                importUsers(0, percPerTranches);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

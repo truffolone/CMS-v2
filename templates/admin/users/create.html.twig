@@ -1,0 +1,21 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Admin {{ parent() }}{% endblock %}
+
+{% form_theme form 'layouts/forms/default.html.twig' %}
+
+{% block body %}
+    <h1>Creazione Utente</h1>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_row(form.username) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.plainPassword) }}
+        {{ form_row(form.userInfo) }}
+        {{ form_row(form.groups) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
