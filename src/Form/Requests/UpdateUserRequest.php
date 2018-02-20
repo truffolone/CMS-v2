@@ -39,17 +39,6 @@ class UpdateUserRequest
      * @var string
      */
     public $plainPassword;
-
-    /**
-     * Reference for the CreateUserInfoRequest Object
-     */
-    public $userInfo;
-
-    /**
-     * Reference for the CreateGroupRequest Object
-     */
-    public $groups;
-
     /**
      * Static function to set the user to edit
      * @param User $user
@@ -61,7 +50,6 @@ class UpdateUserRequest
         $userRequest->username = $user->getUsername();
         $userRequest->email = $user->getEmail();
         $userRequest->plainPassword = '';
-        $userRequest->userInfo = $user->getUserInfo();
 
         return $userRequest;
     }

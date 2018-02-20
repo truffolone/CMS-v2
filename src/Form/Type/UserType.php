@@ -28,12 +28,7 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class)
             ->add('plainPassword', PasswordType::class)
-            ->add('email', EmailType::class)
-        ;
-
-        $builder->add('userInfo', UserInfoType::class);
-
-        $builder->add('groups', GroupType::class, array('label' => 'User Permissions'));
+            ->add('email', EmailType::class);
 
         $builder->add('save', SubmitType::class, array('label' => 'Create User'));
     }

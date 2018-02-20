@@ -29,5 +29,5 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
             arguments:
-                - 'mysql:dbname=cms'
+                - 'mysql:dbname=domini'
                 - { db_table: sessions, db_username: root, db_password: 50dc2592 }

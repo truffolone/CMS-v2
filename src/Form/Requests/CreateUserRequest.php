@@ -38,14 +38,4 @@ class CreateUserRequest
      * @var string
      */
     public $plainPassword;
-
-    /**
-     * Reference for the CreateUserInfoRequest Object
-     */
-    public $userInfo;
-
-    /**
-     * Reference for the CreateGroupRequest Object
-     */
-    public $groups;
 }

@@ -51,11 +51,6 @@ class User implements AdvancedUserInterface, \Serializable
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=50, unique=true, nullable=TRUE)
-     */
-    private $oldId;
-
-    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -69,21 +64,6 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="datetime")
      */
     protected $updatedAt;
-
-    /**
-     * @ORM\OneToOne(targetEntity="UserInfo", mappedBy="user",cascade={"all"}, orphanRemoval=true)
-     */
-    private $userInfo;
-
-    /**
-     * Many Users have Many Groups.
-     * @ORM\ManyToMany(targetEntity="App\Entity\Group", inversedBy="users")
-     * @ORM\JoinTable(name="users_groups",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")}
-     *      )
-     */
-    private $groups;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -105,7 +85,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->username = $username;
     }
 
-    public function getUsername()
+    public function getUsername() :string
     {
         return $this->username;
     }
@@ -117,7 +97,7 @@ class User implements AdvancedUserInterface, \Serializable
         return null;
     }
 
-    public function getPassword()
+    public function getPassword() :string
     {
         return $this->password;
     }
@@ -217,27 +197,6 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUserInfo()
     {
         return $this->userInfo;
-    }
-
-    public function setUserInfo(UserInfo $userInfo)
-    {
-        $this->userInfo = $userInfo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOldId()
-    {
-        return $this->oldId;
-    }
-
-    /**
-     * @param mixed $oldId
-     */
-    public function setOldId($oldId): void
-    {
-        $this->oldId = $oldId;
     }
 
     /**

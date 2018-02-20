@@ -34,7 +34,7 @@ class UsersController extends Controller
     {
         $userRepository = $this->getDoctrine()->getRepository(User::class);
         $pagination = $userRepository->loadList($request->query->getInt('page', 1), $this->get('knp_paginator'));
-die(var_dump($pagination));
+
         return $this->render('admin/users/index.html.twig', ['pagination' => $pagination]);
     }
 
@@ -63,7 +63,7 @@ die(var_dump($pagination));
         /** binding userInfo */
         $userInfo = $user->getUserInfo();
 
-        return $this->render('admin/users/edit.html.twig', ['data' => $userInfo]);
+        return $this->render('admin/users/edit.html.twig', ['data' => $group]);
     }
 
     /**
