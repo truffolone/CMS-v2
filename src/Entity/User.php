@@ -51,6 +51,12 @@ class User implements AdvancedUserInterface, \Serializable
     private $email;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Roles", inversedBy="users")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $roles;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -74,7 +80,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
-        $this->groups = new ArrayCollection();
         $this->isActive = true;
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
@@ -165,9 +170,20 @@ class User implements AdvancedUserInterface, \Serializable
         $this->isActive = $isActive;
     }
 
+    /**
+     * @return mixed
+     */
     public function getRoles()
     {
-        return array('ROLE_ADMIN');
+        return $this->roles;
+    }
+
+    /**
+     * @param mixed $roles
+     */
+    public function setRoles($roles): void
+    {
+        $this->roles = $roles;
     }
 
     public function eraseCredentials()
