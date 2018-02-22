@@ -193,6 +193,11 @@ class User implements AdvancedUserInterface, \Serializable
         $this->roles = $roles;
     }
 
+    public function getRoleObject()
+    {
+        return $this->roles;
+    }
+
     public function eraseCredentials()
     {
     }

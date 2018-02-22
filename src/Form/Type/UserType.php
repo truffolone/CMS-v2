@@ -2,7 +2,10 @@
 
 namespace App\Form\Type;
 
+use App\Entity\Roles;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,7 +31,17 @@ class UserType extends AbstractType
         $builder
             ->add('username', TextType::class)
             ->add('plainPassword', PasswordType::class)
-            ->add('email', EmailType::class);
+            ->add('email', EmailType::class)
+            ->add(
+                'role',
+                EntityType::class,
+                [
+                    'class' => Roles::class,
+                    'choice_label' => 'name',
+                    'expanded' => false,
+                    'multiple' => false
+                ]
+            );
 
         $builder->add('save', SubmitType::class, array('label' => 'Create User'));
     }

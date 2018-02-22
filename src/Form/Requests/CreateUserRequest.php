@@ -38,4 +38,10 @@ class CreateUserRequest
      * @var string
      */
     public $plainPassword;
+
+    /**
+     * @Assert\NotBlank()
+     * @var int
+     */
+    public $role;
 }

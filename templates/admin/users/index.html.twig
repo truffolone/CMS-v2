@@ -5,8 +5,11 @@
 {% block body %}
     <h1>Lista Utenti</h1>
     <div class="row">
-        <div class="content col-md-12">
+        <div class="content col-md-4">
             <p><b>Users Found:</b> {{ pagination.getTotalItemCount }}</p>
+        </div>
+        <div class="content col-md-8 text-right">
+            <a href="{{ path('admin_users_create') }}" class="btn btn-primary">Create New User</a>
         </div>
     </div>
 
@@ -14,10 +17,10 @@
         <tr>
             {# sorting of properties based on query components #}
             <th scope="col">{{ knp_pagination_sortable(pagination, 'Id', 'u.id') }}</th>
-            <th scope="col"{% if pagination.isSorted('i.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Name', 'i.name') }}</th>
-            <th scope="col"{% if pagination.isSorted('i.surname') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Surname', 'i.surname') }}</th>
             <th scope="col"{% if pagination.isSorted('u.username') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Username', 'u.username') }}</th>
             <th scope="col"{% if pagination.isSorted('u.email') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Email', 'u.email') }}</th>
+            <th scope="col"{% if pagination.isSorted('r.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Role Name', 'r.name') }}</th>
+            <th scope="col"{% if pagination.isSorted('u.isActive') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Active', 'u.isActive') }}</th>
             <th scope="col">{{ knp_pagination_sortable(pagination, 'Last Update', 'u.updatedAt') }}</th>
             <th>Azioni</th>
         </tr>
@@ -26,10 +29,10 @@
         {% for user in pagination %}
             <tr {% if loop.index is odd %}class="color"{% endif %}>
                 <td>{{ user.id }}</td>
-                <td>{{ user.userInfo.name }}</td>
-                <td>{{ user.userInfo.surname }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.roleObject.name }}</td>
+                <td>{{ user.isActive }}</td>
                 <td>{{ user.updatedAt | date('Y-m-d h:i:s') }}</td>
                 <td><a href="{{ path('admin_users_edit', {'id': user.id}) }}">Edit</a></td>
             </tr>

@@ -48,7 +48,7 @@ class UserRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $dql   = "SELECT u
                     FROM App\Entity\User u
-                    LEFT JOIN u.userInfo i";
+                    LEFT JOIN u.roles r";
         $query = $em->createQuery($dql);
 
         $pagination = $paginator->paginate(
