@@ -42,9 +42,7 @@ class UpdateUserRequest
     public $email;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(min=8, max=128)
-     * @TruffoloneAssert\IsPasswordValid()
+     * @TruffoloneAssert\IsPasswordValidUpdate()
      * @var string
      */
     public $plainPassword;

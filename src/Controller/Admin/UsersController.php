@@ -14,9 +14,11 @@ use App\Form\Requests\CreateUserRequest;
 use App\Form\Requests\UpdateUserRequest;
 use App\Form\Type\UserType;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/admin/users", name="admin_users")
+ * @Security("has_role('ROLE_ADMIN')")
  * Class UsersController
  * @package App\Controller\Admin
  */
@@ -76,7 +78,11 @@ class UsersController extends Controller
             /** Setting up the new role */
             $user->setUsername($data['username']);
             $user->setEmail($data['email']);
-            $user->setPassword($encoder->encodePassword($user, $data['plainPassword']));
+
+            /** Checking if we are changing the password */
+            if (\array_key_exists('plainPassword', $data) && $data['plainPassword'] !== '') {
+                $user->setPassword($encoder->encodePassword($user, $data['plainPassword']));
+            }
 
             /** Loading role */
             $roleRepository = $em->getRepository(Roles::class);
