@@ -1,0 +1,39 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Roles List {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Roles List</h1>
+    <div class="row">
+        <div class="content col-md-4">
+            <p><b>Roles Found:</b> {{ pagination.getTotalItemCount }}</p>
+        </div>
+        <div class="content col-md-8 text-right">
+            <a href="{{ path('admin_roles_create') }}" class="btn btn-primary">Create New Role</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            {# sorting of properties based on query components #}
+            <th scope="col">{{ knp_pagination_sortable(pagination, 'Id', 'r.id') }}</th>
+            <th scope="col"{% if pagination.isSorted('r.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Name', 'r.name') }}</th>
+            <th scope="col"{% if pagination.isSorted('r.slug') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Slug', 'r.slug') }}</th>
+            <th scope="col"{% if pagination.isSorted('r.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Created', 'r.createdAt') }}</th>
+            <th scope="col"{% if pagination.isSorted('r.updatedAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Last Edit', 'r.updatedAt') }}</th>
+            <th>Actions</th>
+        </tr>
+
+        {# table body #}
+        {% for roles in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ roles.id }}</td>
+                <td>{{ roles.name }}</td>
+                <td>{{ roles.slug }}</td>
+                <td>{{ roles.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{{ roles.updatedAt | date('Y-m-d H:i:s') }}</td>
+                <td><a href="{{ path('admin_roles_edit', {'id': roles.id}) }}">Edit</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

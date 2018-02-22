@@ -2,8 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Group;
-use App\Entity\UserInfo;
 use App\Entity\User;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -71,10 +69,6 @@ class UsersController extends Controller
      * @param Request $request
      * @param UserPasswordEncoderInterface $encoder
      * @throws \LogicException
-     * @throws NonUniqueResultException
-     * @throws NonUniqueResultException
-     * @throws ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws ORMInvalidArgumentException
      * @throws LogicException
      * @return Response

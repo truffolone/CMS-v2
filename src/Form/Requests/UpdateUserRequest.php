@@ -39,6 +39,7 @@ class UpdateUserRequest
      * @var string
      */
     public $plainPassword;
+
     /**
      * Static function to set the user to edit
      * @param User $user

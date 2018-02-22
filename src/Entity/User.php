@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -76,13 +75,17 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $deletedAt;
 
+    /**
+     * Define the default role of the user if nothing is specified
+     * @var string $defaultRole
+     */
+    private $defaultRole = 'ROLE_ANONYMOUS';
+
     public function __construct()
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
         $this->isActive = true;
-        // may not be needed, see section on salt below
-        // $this->salt = md5(uniqid('', true));
     }
 
     public function setUsername($username)
@@ -175,7 +178,11 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getRoles()
     {
-        return $this->roles;
+        if ($role = $this->roles->getSlug()) {
+            return ['ROLE' . strtoupper($role)];
+        }
+
+        return [$this->defaultRole];
     }
 
     /**
@@ -208,11 +215,6 @@ class User implements AdvancedUserInterface, \Serializable
     public function isEnabled()
     {
         return $this->isActive;
-    }
-
-    public function getUserInfo()
-    {
-        return $this->userInfo;
     }
 
     /**
@@ -261,22 +263,6 @@ class User implements AdvancedUserInterface, \Serializable
     public function setDeletedAt($deletedAt): void
     {
         $this->deletedAt = $deletedAt;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    /**
-     * @param mixed $groups
-     */
-    public function setGroups($groups): void
-    {
-        $this->groups = $groups;
     }
 
     /** @see \Serializable::serialize() */
