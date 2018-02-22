@@ -31,9 +31,9 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.roleObject.name }}</td>
+                <td><a href="{{ path('admin_roles_edit', {'id': user.roleObject.id}) }}">{{ user.roleObject.name }}</a></td>
                 <td>{{ user.isActive }}</td>
-                <td>{{ user.updatedAt | date('Y-m-d h:i:s') }}</td>
+                <td>{{ user.updatedAt | date('Y-m-d H:i:s') }}</td>
                 <td><a href="{{ path('admin_users_edit', {'id': user.id}) }}">Edit</a></td>
             </tr>
         {% endfor %}

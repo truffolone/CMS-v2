@@ -2,8 +2,19 @@
 
 {% block title %}Admin {{ parent() }}{% endblock %}
 
-{% block body %}
+{% form_theme form 'layouts/forms/default.html.twig' %}
 
-    {{ dump(data) }}
+{% block body %}
+    <h1>Edita Utente</h1>
+
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword) }}
+    {{ form_row(form.role) }}
+
+    {{ form_end(form) }}
 
 {% endblock %}

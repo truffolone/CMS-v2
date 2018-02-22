@@ -23,8 +23,6 @@ class UserRepository extends ServiceEntityRepository
      */
     public function findByEmailOrUsername(string $email, string $username): ?User
     {
-        // automatically knows to select Products
-        // the "p" is an alias you'll use in the rest of the query
         $qb = $this->createQueryBuilder('u')
             ->andWhere('u.email = :email OR u.username = :username')
             ->setParameter('email', $email)
@@ -32,9 +30,6 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery();
 
         return $qb->setMaxResults(1)->getOneOrNullResult();
-
-        // to get just one result:
-        // $product = $qb->setMaxResults(1)->getOneOrNullResult();
     }
 
     /**
