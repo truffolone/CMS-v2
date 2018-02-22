@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RolesRepository")
- * @ORM\Table(name="roles")
+ * @ORM\Entity(repositoryClass="App\Repository\DomainRepository")
+ * @ORM\Table(name="domains")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\HasLifecycleCallbacks
  */
-class Roles
+class Domain
 {
     /**
      * @ORM\Id
@@ -23,24 +23,19 @@ class Roles
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="roles")
+     * @ORM\Column(type="string", length=255, options={"unique":TRUE})
      */
-    private $users;
+    private $domain;
 
     /**
-     * @ORM\Column(type="string", options={"unique":TRUE})
+     * @ORM\Column(type="datetime")
      */
-    private $name;
+    private $expireDate;
 
     /**
-     * @ORM\Column(type="string", length=64, options={"unique":TRUE})
+     * @ORM\OneToMany(targetEntity="App\Entity\Contract", mappedBy="domain")
      */
-    private $slug;
-
-    /**
-     * @ORM\Column(type="text", options={"default":""})
-     */
-    private $description;
+    private $contracts;
 
     /**
      * @ORM\Column(type="datetime")
@@ -57,23 +52,18 @@ class Roles
      */
     private $deletedAt;
 
+    /**
+     * Domain constructor.
+     */
     public function __construct()
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
-        $this->users = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
     }
 
     /**
-     * @return Collection|User[]
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
-     * @return integer $id
+     * @return int
      */
     public function getId() :int
     {
@@ -81,53 +71,52 @@ class Roles
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName() :string
+    public function getDomain() :string
     {
-        return $this->name;
+        return $this->domain;
     }
 
     /**
-     * @param mixed $name
-     */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug() :string
-    {
-        return $this->slug;
-    }
-
-    /**
-     * Slug will be forced to uppercase before assign
-     * @param string $slug
+     * @param string $domain
      * @return void
      */
-    public function setSlug(string $slug): void
+    public function setDomain($domain): void
     {
-        $this->slug = strtoupper($slug);
+        $this->domain = $domain;
     }
 
     /**
      * @return mixed
      */
-    public function getDescription()
+    public function getExpireDate()
     {
-        return $this->description;
+        return $this->expireDate;
     }
 
     /**
-     * @param mixed $description
+     * @param mixed $expireDate
      */
-    public function setDescription($description): void
+    public function setExpireDate($expireDate): void
     {
-        $this->description = $description;
+        $this->expireDate = $expireDate;
+    }
+
+    /**
+     * @return Collection/Contract[]
+     */
+    public function getContracts() :Collection
+    {
+        return $this->contracts;
+    }
+
+    /**
+     * @param mixed $contracts
+     */
+    public function setContracts($contracts): void
+    {
+        $this->contracts = $contracts;
     }
 
     /**
@@ -140,6 +129,7 @@ class Roles
 
     /**
      * @param mixed $createdAt
+     * @return void
      */
     public function setCreatedAt($createdAt): void
     {
@@ -156,6 +146,7 @@ class Roles
 
     /**
      * @param mixed $updatedAt
+     * @return void
      */
     public function setUpdatedAt($updatedAt): void
     {
@@ -172,6 +163,7 @@ class Roles
 
     /**
      * @param mixed $deletedAt
+     * @return void
      */
     public function setDeletedAt($deletedAt): void
     {

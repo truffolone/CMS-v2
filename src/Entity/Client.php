@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RolesRepository")
- * @ORM\Table(name="roles")
+ * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @ORM\Table(name="clients")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\HasLifecycleCallbacks
  */
-class Roles
+class Client
 {
     /**
      * @ORM\Id
@@ -23,24 +23,24 @@ class Roles
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="roles")
-     */
-    private $users;
-
-    /**
-     * @ORM\Column(type="string", options={"unique":TRUE})
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=64, options={"unique":TRUE})
+     * @ORM\Column(type="string", length=255)
      */
-    private $slug;
+    private $reference;
 
     /**
-     * @ORM\Column(type="text", options={"default":""})
+     * @ORM\Column(type="string", length=255, options={"unique":TRUE})
      */
-    private $description;
+    private $email;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Contract", mappedBy="client")
+     */
+    private $contracts;
 
     /**
      * @ORM\Column(type="datetime")
@@ -57,23 +57,18 @@ class Roles
      */
     private $deletedAt;
 
+    /**
+     * Client constructor.
+     */
     public function __construct()
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
-        $this->users = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
     }
 
     /**
-     * @return Collection|User[]
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
-     * @return integer $id
+     * @return int
      */
     public function getId() :int
     {
@@ -81,7 +76,7 @@ class Roles
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName() :string
     {
@@ -89,7 +84,8 @@ class Roles
     }
 
     /**
-     * @param mixed $name
+     * @param string $name
+     * @return void
      */
     public function setName($name): void
     {
@@ -97,37 +93,53 @@ class Roles
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getSlug() :string
+    public function getReference() :string
     {
-        return $this->slug;
+        return $this->reference;
     }
 
     /**
-     * Slug will be forced to uppercase before assign
-     * @param string $slug
+     * @param string $reference
      * @return void
      */
-    public function setSlug(string $slug): void
+    public function setReference($reference): void
     {
-        $this->slug = strtoupper($slug);
+        $this->reference = $reference;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDescription()
+    public function getEmail() :string
     {
-        return $this->description;
+        return $this->email;
     }
 
     /**
-     * @param mixed $description
+     * @param string $email
+     * @return void
      */
-    public function setDescription($description): void
+    public function setEmail($email): void
     {
-        $this->description = $description;
+        $this->email = $email;
+    }
+
+    /**
+     * @return Collection/Contract[]
+     */
+    public function getContracts() :Collection
+    {
+        return $this->contracts;
+    }
+
+    /**
+     * @param mixed $contracts
+     */
+    public function setContracts($contracts): void
+    {
+        $this->contracts = $contracts;
     }
 
     /**
@@ -140,6 +152,7 @@ class Roles
 
     /**
      * @param mixed $createdAt
+     * @return void
      */
     public function setCreatedAt($createdAt): void
     {
@@ -156,6 +169,7 @@ class Roles
 
     /**
      * @param mixed $updatedAt
+     * @return void
      */
     public function setUpdatedAt($updatedAt): void
     {
@@ -172,6 +186,7 @@ class Roles
 
     /**
      * @param mixed $deletedAt
+     * @return void
      */
     public function setDeletedAt($deletedAt): void
     {

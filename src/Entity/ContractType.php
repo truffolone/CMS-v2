@@ -2,18 +2,18 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RolesRepository")
- * @ORM\Table(name="roles")
+ * @ORM\Entity(repositoryClass="App\Repository\ContractTypeRepository")
+ * @ORM\Table(name="contract_types")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @ORM\HasLifecycleCallbacks
  */
-class Roles
+class ContractType
 {
     /**
      * @ORM\Id
@@ -23,24 +23,14 @@ class Roles
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="roles")
-     */
-    private $users;
-
-    /**
-     * @ORM\Column(type="string", options={"unique":TRUE})
+     * @ORM\Column(type="string", length=128)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=64, options={"unique":TRUE})
+     * @ORM\OneToMany(targetEntity="App\Entity\Contract", mappedBy="contractType")
      */
-    private $slug;
-
-    /**
-     * @ORM\Column(type="text", options={"default":""})
-     */
-    private $description;
+    private $contracts;
 
     /**
      * @ORM\Column(type="datetime")
@@ -57,23 +47,18 @@ class Roles
      */
     private $deletedAt;
 
+    /**
+     * ContractType constructor.
+     */
     public function __construct()
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
-        $this->users = new ArrayCollection();
+        $this->contracts = new ArrayCollection();
     }
 
     /**
-     * @return Collection|User[]
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
-    /**
-     * @return integer $id
+     * @return int
      */
     public function getId() :int
     {
@@ -81,7 +66,7 @@ class Roles
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getName() :string
     {
@@ -90,6 +75,7 @@ class Roles
 
     /**
      * @param mixed $name
+     * @return void
      */
     public function setName($name): void
     {
@@ -97,39 +83,21 @@ class Roles
     }
 
     /**
-     * @return mixed
+     * @return Collection/Contract[]
      */
-    public function getSlug() :string
+    public function getContracts() :Collection
     {
-        return $this->slug;
+        return $this->contracts;
     }
 
     /**
-     * Slug will be forced to uppercase before assign
-     * @param string $slug
+     * @param mixed $contracts
      * @return void
      */
-    public function setSlug(string $slug): void
+    public function setContracts($contracts): void
     {
-        $this->slug = strtoupper($slug);
+        $this->contracts = $contracts;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description): void
-    {
-        $this->description = $description;
-    }
-
     /**
      * @return mixed
      */
@@ -140,6 +108,7 @@ class Roles
 
     /**
      * @param mixed $createdAt
+     * @return void
      */
     public function setCreatedAt($createdAt): void
     {
@@ -156,6 +125,7 @@ class Roles
 
     /**
      * @param mixed $updatedAt
+     * @return void
      */
     public function setUpdatedAt($updatedAt): void
     {
@@ -172,9 +142,11 @@ class Roles
 
     /**
      * @param mixed $deletedAt
+     * @return void
      */
     public function setDeletedAt($deletedAt): void
     {
         $this->deletedAt = $deletedAt;
     }
+
 }
