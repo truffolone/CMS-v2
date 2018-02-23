@@ -1,0 +1,43 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Clients List {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Clients List</h1>
+    <div class="row">
+        <div class="content col-md-4">
+            <p><b>Clients Found:</b> {{ pagination.getTotalItemCount }}</p>
+        </div>
+        <div class="content col-md-8 text-right">
+            <a href="{{ path('admin_clients_create') }}" class="btn btn-primary">Create New Client</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            {# sorting of properties based on query components #}
+            <th scope="col">{{ knp_pagination_sortable(pagination, 'Id', 'c.id') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Name', 'c.name') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.reference') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Reference', 'c.reference') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.email') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Email', 'c.email') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Created', 'c.createdAt') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.updatedAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Last Edit', 'c.updatedAt') }}</th>
+            <th>Actions</th>
+        </tr>
+
+        {# table body #}
+        {% for client in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ client.id }}</td>
+                <td>{{ client.name }}</td>
+                <td>{{ client.reference }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{{ client.updatedAt | date('Y-m-d H:i:s') }}</td>
+                <td>
+                    <a href="{{ path('admin_clients_edit', {'id': client.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

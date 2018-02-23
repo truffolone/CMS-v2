@@ -69,11 +69,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $isActive;
 
     /**
+     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
 
     /**
+     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      */
     protected $updatedAt;
