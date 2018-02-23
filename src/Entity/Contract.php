@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -54,6 +55,12 @@ class Contract
     private $client;
 
     /**
+     * Many Contracts have Many Users.
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="contracts")
+     */
+    private $users;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
@@ -72,6 +79,7 @@ class Contract
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -180,6 +188,15 @@ class Contract
     public function setClient(Client $client): void
     {
         $this->client = $client;
+    }
+
+    /**
+     * @param User $user
+     * @return void
+     */
+    public function addUser(User $user) :void
+    {
+        $this->users[] = $user;
     }
 
     /**

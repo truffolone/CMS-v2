@@ -1,0 +1,39 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Contract Types List {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Roles List</h1>
+    <div class="row">
+        <div class="content col-md-4">
+            <p><b>Contract Types Found:</b> {{ pagination.getTotalItemCount }}</p>
+        </div>
+        <div class="content col-md-8 text-right">
+            <a href="{{ path('admin_contract_types_create') }}" class="btn btn-primary">Create New Contract Type</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            {# sorting of properties based on query components #}
+            <th scope="col">{{ knp_pagination_sortable(pagination, 'Id', 'c.id') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.name') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Name', 'c.name') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.description') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Description', 'c.description') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Created', 'c.createdAt') }}</th>
+            <th scope="col"{% if pagination.isSorted('c.updatedAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Last Edit', 'c.updatedAt') }}</th>
+            <th>Actions</th>
+        </tr>
+
+        {# table body #}
+        {% for ct in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ ct.id }}</td>
+                <td>{{ ct.name }}</td>
+                <td>{{ ct.description }}</td>
+                <td>{{ ct.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{{ ct.updatedAt | date('Y-m-d H:i:s') }}</td>
+                <td><a href="{{ path('admin_contract_types_edit', {'id': ct.id}) }}">Edit</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

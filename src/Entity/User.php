@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -56,6 +57,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $roles;
 
     /**
+     * Many Users have Many Contracts.
+     * @ORM\ManyToMany(targetEntity="Contract", inversedBy="users")
+     * @ORM\JoinTable(name="users_contracts")
+     */
+    private $contracts;
+
+    /**
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
@@ -85,6 +93,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->createdAt= new \DateTime();
         $this->updatedAt= new \DateTime();
+        $this->contracts = new ArrayCollection();
         $this->isActive = true;
     }
 
@@ -196,6 +205,16 @@ class User implements AdvancedUserInterface, \Serializable
     public function getRoleObject()
     {
         return $this->roles;
+    }
+
+    /**
+     * @param Contract $contract
+     * @return void
+     */
+    public function addContract(Contract $contract) :void
+    {
+        $contract->addUser($this);
+        $this->contracts[] = $contract;
     }
 
     public function eraseCredentials()

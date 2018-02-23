@@ -1,0 +1,42 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Domains List {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Domains List</h1>
+    <div class="row">
+        <div class="content col-md-4">
+            <p><b>Domains Found:</b> {{ pagination.getTotalItemCount }}</p>
+        </div>
+        <div class="content col-md-8 text-right">
+            <a href="{{ path('admin_domains_create') }}" class="btn btn-primary">Create New Domain</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <tr>
+            {# sorting of properties based on query components #}
+            <th scope="col">{{ knp_pagination_sortable(pagination, 'Id', 'd.id') }}</th>
+            <th scope="col"{% if pagination.isSorted('d.domain') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Domain', 'd.domain') }}</th>
+            <th scope="col"{% if pagination.isSorted('d.expireDate') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Expire Date', 'd.expireDate') }}</th>
+            <th scope="col"{% if pagination.isSorted('d.createdAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Created', 'd.createdAt') }}</th>
+            <th scope="col"{% if pagination.isSorted('d.updatedAt') %} class="sorted"{% endif %}>{{ knp_pagination_sortable(pagination, 'Last Edit', 'd.updatedAt') }}</th>
+            <th>Actions</th>
+        </tr>
+
+        {# table body #}
+        {% for domain in pagination %}
+            <tr {% if loop.index is odd %}class="color"{% endif %}>
+                <td>{{ domain.id }}</td>
+                <td>{{ domain.domain }}</td>
+                <td>{{ domain.expireDate | date('Y-m-d') }}</td>
+                <td>{{ domain.createdAt | date('Y-m-d H:i:s') }}</td>
+                <td>{{ domain.updatedAt | date('Y-m-d H:i:s') }}</td>
+                <td>
+                    <a href="{{ path('admin_domains_edit', {'id': domain.id}) }}">Edit</a> |
+                    <a href="{{ domain.domain }}" target="_blank"><i class="far fa-eye"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

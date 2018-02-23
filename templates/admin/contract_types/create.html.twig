@@ -1,0 +1,18 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}Admin {{ parent() }}{% endblock %}
+
+{% form_theme form 'layouts/forms/default.html.twig' %}
+
+{% block body %}
+    <h1>Create a Contract Type</h1>
+
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}

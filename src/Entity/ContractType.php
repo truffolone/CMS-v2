@@ -28,6 +28,11 @@ class ContractType
     private $name;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Contract", mappedBy="contractType")
      */
     private $contracts;
@@ -80,6 +85,22 @@ class ContractType
     public function setName($name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
+    {
+        $this->description = $description;
     }
 
     /**
@@ -148,5 +169,4 @@ class ContractType
     {
         $this->deletedAt = $deletedAt;
     }
-
 }
